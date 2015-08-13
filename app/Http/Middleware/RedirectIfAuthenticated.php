@@ -3,6 +3,7 @@
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated {
 
@@ -35,7 +36,12 @@ class RedirectIfAuthenticated {
 	{
 		if ($this->auth->check())
 		{
-			return new RedirectResponse(url('/home'));
+            if (!Auth::user()->is_admin) {
+                return new RedirectResponse(url('/stu/home'));
+            } else {
+                return new RedirectResponse(url('/admin'));
+            }
+
 		}
 
 		return $next($request);
